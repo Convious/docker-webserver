@@ -3,16 +3,13 @@
 # NGINX x ALPINE.
 FROM nginx:1.15.7-alpine
 
-# MAINTAINER OF THE PACKAGE.
-LABEL maintainer="Neo Ighodaro <neo@creativitykills.co>"
+# AUTHORS OF THE PACKAGE.
+LABEL authors="Neo Ighodaro <neo@creativitykills.co>, Oshane Bailey <b4.oshany@gmail.com>"
 
 # INSTALL SOME SYSTEM PACKAGES.
 RUN apk --update --no-cache add ca-certificates \
     bash \
     supervisor
-
-# trust this project public key to trust the packages.
-ADD https://php.codecasts.rocks/php-alpine.rsa.pub /etc/apk/keys/php-alpine.rsa.pub
 
 # IMAGE ARGUMENTS WITH DEFAULTS.
 ARG PHP_VERSION=7.2
@@ -23,24 +20,56 @@ ARG NGINX_HTTPS_PORT=443
 
 # CONFIGURE ALPINE REPOSITORIES AND PHP BUILD DIR.
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/main" > /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories && \
-    echo "@php https://php.codecasts.rocks/v${ALPINE_VERSION}/php-${PHP_VERSION}" >> /etc/apk/repositories
+    echo "http://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/community" >> /etc/apk/repositories
 
 # INSTALL PHP AND SOME EXTENSIONS. SEE: https://github.com/codecasts/php-alpine
-RUN apk add --no-cache --update php-fpm@php \
-    php@php \
-    php-openssl@php \
-    php-pdo@php \
-    php-pdo_mysql@php \
-    php-mbstring@php \
-    php-phar@php \
-    php-session@php \
-    php-dom@php \
-    php-ctype@php \
-    php-zlib@php \
-    php-json@php \
-    php-xml@php && \
-    ln -s /usr/bin/php7 /usr/bin/php
+RUN apk add --no-cache --update \
+    gd \
+    freetype \
+    libpng \
+    mysql-client \
+    libjpeg-turbo \
+    freetype-dev \
+    libpng-dev \
+    nodejs \
+    git \
+    php7 \
+    php7-fpm \
+    php7-openssl \
+    php7-pdo \
+    php7-pdo_mysql \
+    php7-mbstring \
+    php7-phar \
+    php7-session \
+    php7-mcrypt \
+    php7-dom \
+    php7-curl \
+    php7-ctype \
+    php7-zlib \
+    php7-json \
+    php7-dom \
+    php7-gd \
+    php7-zip \
+    php7-xml \
+    php7-tokenizer \
+    php7-iconv \
+    php7-simplexml \
+    php7-fileinfo \
+    php7-calendar \
+    php7-exif \
+    php7-ftp \
+    php7-gettext \
+    php7-pcntl \
+    php7-posix \
+    php7-shmop \
+    php7-wddx \
+    php7-xmlreader \
+    php7-xmlwriter \
+    php7-xsl
+    # ln -s /usr/bin/php7 /usr/bin/php
+
+# INSTALL CURL
+RUN apk --no-cache add curl
 
 # CONFIGURE WEB SERVER.
 RUN mkdir -p /var/www && \
